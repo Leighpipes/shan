@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Happy Birthday Shania</title>
+  <!-- Load custom fun fonts from Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chewy&family=Luckiest+Guy&display=swap">
+  
+  <style>
+    /* =========================================
+       1. CSS VARIABLES & THEMES
+       ========================================= */
+    :root {
+      /* Default Light Theme Colors */
+      --paper: #fbf7f2;
+      --ink: #3b2a2a;
+      --acc: #5a1fe6;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    
+    /* Dark Theme Colors (activates if user's device is in dark mode) */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --paper: #2a1f24;
+        --ink: #fbeee6;
+        --acc: #b9a0ff;
+      }
+    }
+    
+    /* Manual Dark Theme override */
+    :root[data-theme="dark"] {
+      --paper: #2a1f24;
+      --ink: #fbeee6;
+      --acc: #b9a0ff;
+    }
+
+    /* =========================================
+       2. GLOBAL LAYOUT & BACKGROUND
+       ========================================= */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* Prevents scrolling */
+    }
+    
+    body {
+      background: linear-gradient(120deg, #c62f2a, #e0473a 48%, #f2753d);
+      display: grid;
+      place-items: center; /* Centers content perfectly */
+      font-family: Chewy, 'Comic Sans MS', cursive;
+    }
+    
+    /* Vignette effect (darkened edges) */
+    #vg {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none; /* Lets clicks pass through to elements behind it */
+      background: radial-gradient(ellipse 60% 70% at 68% 52%, transparent 20%, rgba(35,0,0,.55) 100%);
+    }
+
+    /* Container for floating balloons */
+    #bl {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* =========================================
+       3. BALLOON & HEART ANIMATIONS
+       ========================================= */
+    /* Base balloon style */
+    .b {
+      position: absolute;
+      border-radius: 50% 50% 46% 46%;
+      background: radial-gradient(circle at 32% 26%, rgba(255,255,255,.75) 0 7%, transparent 8%), var(--c);
+      box-shadow: inset -6px -8px 14px rgba(0,0,0,.13);
+    }
+    
+    /* Balloon string */
+    .b::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      width: 1px;
+      height: 70px;
+      background: rgba(255,255,255,.55);
+    }
+    
+    /* Floating up animation for balloons */
+    .fb {
+      bottom: -25vh;
+      opacity: .85;
+      animation: up linear infinite;
+    }
+    
+    /* Floating hearts */
+    .fh {
+      position: absolute;
+      bottom: -10vh;
+      color: rgba(255,200,220,.8);
+      animation: up linear infinite;
+    }
+    
+    /* Keyframes for making things float upwards while swaying slightly */
+    @keyframes up {
+      25% { transform: translate(var(--sw), -35vh); }
+      50% { transform: translate(0, -70vh); }
+      75% { transform: translate(calc(var(--sw) * -1), -105vh); }
+      100% { transform: translate(0, -145vh); }
+    }
+
+    /* Static balloons attached to the background */
+    .sb {
+      width: calc(var(--u) * var(--s));
+      height: calc(var(--u) * var(--s) * 1.2);
+      animation: bob 3.6s ease-in-out infinite alternate;
+    }
+    
+    .sb::after {
+      height: calc(var(--u) * 9);
+    }
+    
+    @keyframes bob {
+      to { transform: translateY(calc(var(--u) * -1.2)) rotate(3deg); }
+    }
+
+    /* =========================================
+       4. STAGE (Main Container)
+       ========================================= */
+    .stage {
+      position: relative;
+      z-index: 2;
+      width: min(100vw, 177.78vh); /* Maintains a 16:9 aspect ratio */
+      aspect-ratio: 16/9;
+      --u: min(1vw, 1.7778vh); /* Responsive unit base */
+    }
+    
+    .stage > * {
+      position: absolute;
+    }
+
+    /* Decorative hearts */
+    .ht {
+      filter: drop-shadow(0 0 6px #ff8fb0);
+      line-height: 1;
+    }
+
+    /* Spotlight effect behind the cake */
+    #spot {
+      left: 42%;
+      top: 2%;
+      width: 58%;
+      height: 96%;
+      background: radial-gradient(closest-side, rgba(255,222,140,.5), rgba(255,170,80,.18) 60%, transparent);
+      animation: sp 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes sp {
+      to { opacity: .55; transform: scale(1.06); }
+    }
+
+    /* =========================================
+       5. CAKE & CANDLE GRAPHICS
+       ========================================= */
+    #cake {
+      left: 46.5%;
+      top: 15.8%;
+      width: 49.8%;
+      height: 79.9%;
+      overflow: visible;
+      filter: drop-shadow(0 0 calc(var(--u) * 2) rgba(255,175,70,.55));
+      animation: cg 3.2s ease-in-out infinite alternate;
+    }
+    
+    /* Makes the cake glow */
+    @keyframes cg {
+      to { filter: drop-shadow(0 0 calc(var(--u) * 4.5) rgba(255,205,110,.95)); }
+    }
+
+    /* Candle flame flickering animation */
+    .fl {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: fk .45s ease-in-out infinite alternate;
+    }
+    
+    @keyframes fk {
+      to { transform: scale(.88, 1.14) rotate(4deg); }
+    }
+
+    /* Flame halo & rays pulsating */
+    .ha, .ry {
+      animation: hp 1.4s ease-in-out infinite alternate;
+    }
+    
+    @keyframes hp {
+      from { opacity: .45; }
+      to { opacity: 1; }
+    }
+
+    /* =========================================
+       6. TEXT & TYPOGRAPHY
+       ========================================= */
+    .ttl {
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      filter: drop-shadow(0 0 7px rgba(255,255,255,.55));
+    }
+    
+    .ttl text {
+      font: 42px 'Chewy', cursive;
+      fill: #5a1fe6;
+      letter-spacing: 1px;
+    }
+
+    #chap {
+      left: 64.8%;
+      top: 88.5%;
+      width: 13.3%;
+      text-align: center;
+      font: calc(var(--u) * 2.4) 'Luckiest Guy', Impact, sans-serif;
+      color: #5a1fe6;
+      text-shadow: 0 0 10px rgba(255,255,255,.6);
+    }
+    
+    #hint {
+      left: 46%;
+      width: 50%;
+      top: 95.5%;
+      text-align: center;
+      font-size: calc(var(--u) * 1.5);
+      color: rgba(255,255,255,.8);
+      transition: opacity .6s;
+    }
+    
+    #hint.off {
+      opacity: 0;
+    }
+
+    /* =========================================
+       7. PHOTO CAROUSEL
+       ========================================= */
+    #car {
+      inset: 0;
+    }
+    
+    .card {
+      position: absolute;
+      background: #ffa3bb;
+      border: calc(var(--u) * .4) solid #ffd6e4;
+      border-radius: calc(var(--u) * 1.6);
+      overflow: hidden;
+      cursor: pointer;
+      /* Smooth transitions when photos shift positions */
+      transition: left .75s, top .75s, width .75s, height .75s, transform .75s, opacity .75s;
+      transition-timing-function: cubic-bezier(.3, .8, .25, 1);
+      box-shadow: 0 0 calc(var(--u) * 1.2) calc(var(--u) * .3) rgba(255,205,230,.95), 0 0 calc(var(--u) * 3.4) rgba(255,110,170,.7);
+      animation: gp 2.2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes gp {
+      to { box-shadow: 0 0 calc(var(--u) * 2) calc(var(--u) * .6) #fff, 0 0 calc(var(--u) * 5) calc(var(--u) * .7) rgba(255,90,160,.9); }
+    }
+    
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* =========================================
+       8. INTERACTIVE MAILBOX
+       ========================================= */
+    .mail {
+      left: 10.8%;
+      top: 19.7%;
+      width: 26.6%;
+      height: 57.2%;
+      cursor: pointer;
+      perspective: 800px;
+      outline: none;
+    }
+    
+    /* Mailbox wiggles slightly to attract attention */
+    .mail:not(.open) {
+      animation: wig 2.6s infinite;
+    }
+    
+    @keyframes wig {
+      0%, 12%, 100% { transform: none; }
+      3% { transform: rotate(-2.5deg); }
+      6% { transform: rotate(2.5deg); }
+      9% { transform: rotate(-1.5deg); }
+    }
+    
+    /* The paper letter inside the mailbox */
+    .letter {
+      position: absolute;
+      left: 13.3%;
+      width: 75%;
+      top: 0;
+      height: 84%;
+      z-index: 1;
+      background: #f2f2f2;
+      transform: translateY(55%); /* Initially hidden down inside */
+      transition: transform .8s .35s cubic-bezier(.2, .8, .2, 1);
+      /* Makes the paper look like it has a zigzag bottom edge */
+      clip-path: polygon(0 0, 100% 0, 100% 97%, 92% 100%, 84% 97%, 76% 100%, 68% 97%, 60% 100%, 52% 97%, 44% 100%, 36% 97%, 28% 100%, 20% 97%, 12% 100%, 6% 97%, 0 100%);
+      text-align: center;
+      color: #111;
+    }
+    
+    .letter b {
+      display: block;
+      margin-top: 6%;
+      font: calc(var(--u) * 1.7) 'Luckiest Guy', Impact, sans-serif;
+    }
+    
+    .letter small {
+      font-size: calc(var(--u) * 1.2);
+      color: #777;
+    }
+    
+    /* When opened, the letter slides up */
+    .open .letter {
+      transform: none;
+    }
+    
+    /* The front of the envelope */
+    .pocket {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 60.7%;
+      z-index: 2;
+      background: linear-gradient(#ffd3cb, #f6a79d);
+      border-radius: calc(var(--u) * 1) calc(var(--u) * 1) calc(var(--u) * 2) calc(var(--u) * 2);
+      box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2) rgba(0,0,0,.25);
+    }
+    
+    .pocket::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(255,255,255,.35);
+      clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+    }
+    
+    /* The top flap of the envelope */
+    .flap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 39.3%;
+      height: 34%;
+      z-index: 3;
+      background: linear-gradient(#ffc2b8, #f49a90);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform .6s, z-index 0s .3s;
+    }
+    
+    /* When opened, the flap flips up */
+    .open .flap {
+      transform: rotateX(180deg);
+      z-index: 0;
+    }
+    
+    #tip {
+      left: 10.8%;
+      width: 26.6%;
+      top: 79%;
+      text-align: center;
+      color: #fff;
+      font-size: calc(var(--u) * 1.6);
+      text-shadow: 0 0 8px rgba(0,0,0,.35);
+    }
+
+    /* =========================================
+       9. MODAL / POPUP MESSAGE WINDOW
+       ========================================= */
+    #md {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      background: rgba(30,0,0,.55);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+    
+    #md.on {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .paper {
+      width: min(88vw, 560px);
+      max-height: 84vh;
+      overflow: auto;
+      box-sizing: border-box;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 26px 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 40px rgba(255,170,120,.55);
+      transform: translateY(30px) scale(.96);
+      transition: transform .5s;
+    }
+    
+    #md.on .paper {
+      transform: none;
+    }
+    
+    .paper h2 {
+      margin: 0 0 12px;
+      font: 2rem 'Luckiest Guy', Impact, sans-serif;
+      color: var(--acc);
+    }
+    
+    .paper p {
+      margin: 0 0 18px;
+      font: 1.25rem/1.55 Chewy, cursive;
+      white-space: pre-line;
+      min-height: 6em;
+    }
+    
+    .paper button, .add {
+      font: 1rem Chewy, cursive;
+      color: #fff;
+      background: #e0473a;
+      border: 0;
+      border-radius: 99px;
+      padding: 8px 20px;
+      cursor: pointer;
+    }
+    
+    /* Add Photos button */
+    
+  </style>
+</head>
+<body>
+  
+  <!-- Background Elements -->
+  <div id="bl"></div>
+  <div id="vg"></div>
+  
+  <!-- Main Interactive Stage -->
+  <div class="stage" id="st">
+    <div id="spot"></div>
+    
+    <!-- SVG Cake Graphic -->
+    <svg id="cake" viewBox="0 0 450 405">
+      <defs>
+        <!-- Gradients and Patterns for the cake drawing -->
+        <linearGradient id="bd" x1="0" x2="1"><stop offset="0" stop-color="#6d3320"/><stop offset=".5" stop-color="#8d4c31"/><stop offset="1" stop-color="#5a2716"/></linearGradient>
+        <radialGradient id="hg"><stop offset="0" stop-color="#ffd36a" stop-opacity=".9"/><stop offset="1" stop-color="#ffb02e" stop-opacity="0"/></radialGradient>
+        <radialGradient id="fg" cx="50%" cy="75%" r="65%"><stop offset="0" stop-color="#fff7b8"/><stop offset=".5" stop-color="#ffb42e"/><stop offset="1" stop-color="#ff5a1f"/></radialGradient>
+        <pattern id="st2" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="14" height="7" fill="#f4a4b4"/></pattern>
+      </defs>
+      
+      <!-- Cake Base/Platter -->
+      <ellipse cx="225" cy="300" rx="222" ry="100" fill="#f4d3c3" stroke="#8a5a4a" stroke-width="5"/>
+      <ellipse cx="225" cy="295" rx="186" ry="76" fill="#ebbfab"/>
+      
+      <!-- Cake Tiers -->
+      <path d="M67 110V285A165 58 0 0 0 397 285V110Z" fill="url(#bd)"/>
+      <path d="M67 235A165 58 0 0 0 397 235V262A165 58 0 0 1 67 262Z" fill="#e9bb92"/>
+      <ellipse cx="232" cy="110" rx="165" ry="55" fill="#7b3b23"/>
+      <ellipse cx="232" cy="108" rx="150" ry="46" fill="#5e2a18"/>
+      
+      <!-- Drips on cake -->
+      <g fill="#4b2113">
+        <rect x="86" y="138" width="20" height="48" rx="10"/>
+        <rect x="142" y="158" width="20" height="58" rx="10"/>
+        <rect x="208" y="166" width="22" height="64" rx="11"/>
+        <rect x="272" y="160" width="20" height="46" rx="10"/>
+        <rect x="330" y="146" width="20" height="54" rx="10"/>
+        <rect x="366" y="126" width="18" height="40" rx="9"/>
+      </g>
+      
+      <!-- Pink icing decorations -->
+      <g fill="#efc3b1" stroke="#cf9a86" stroke-width="2">
+        <ellipse cx="95" cy="124" rx="30" ry="20"/>
+        <ellipse cx="152" cy="150" rx="34" ry="22"/>
+        <ellipse cx="228" cy="162" rx="36" ry="22"/>
+        <ellipse cx="306" cy="152" rx="34" ry="22"/>
+        <ellipse cx="366" cy="126" rx="28" ry="19"/>
+      </g>
+      
+      <!-- Strawberries / Decorations -->
+      <path d="M118 62Q150 38 182 62Q186 105 150 124Q112 104 118 62Z" fill="#d6432f"/>
+      <path d="M232 52Q268 20 314 52Q320 108 268 130Q216 106 232 52Z" fill="#e2503a"/>
+      
+      <!-- Sprinkles -->
+      <g fill="#4b3a55" stroke="#2e2338" stroke-width="1.5">
+        <circle cx="190" cy="118" r="12"/><circle cx="214" cy="128" r="12"/><circle cx="238" cy="118" r="12"/>
+        <circle cx="262" cy="128" r="12"/><circle cx="286" cy="118" r="12"/><circle cx="202" cy="142" r="12"/>
+        <circle cx="228" cy="144" r="12"/><circle cx="254" cy="142" r="12"/>
+      </g>
+      
+      <!-- Dynamic Candles will be injected here via JavaScript -->
+      <g id="cds"></g>
+    </svg>
+    
+    <!-- Photo Carousel Container -->
+    <div id="car"></div>
+    
+    <!-- Arched Text SVG -->
+    <svg class="ttl" viewBox="0 0 903 507">
+      <defs>
+        <path id="arc" d="M362 152Q632 -62 905 152"/>
+      </defs>
+      <text><textPath href="#arc" id="tt" textLength="560">HAPPY BIRTHDAY</textPath></text>
+    </svg>
+    
+    <!-- Helper Text -->
+    <div id="chap">CHAPTERS</div>
+    <div id="hint">scroll ↕ to turn the chapters</div>
+    
+    <!-- Decorative Floating Hearts -->
+    <b class="ht" style="left:12.8%;top:15.5%;font-size:calc(var(--u)*6);color:#c4333f">♥</b>
+    <b class="ht" style="left:32.5%;top:48%;font-size:calc(var(--u)*5);color:#c8607f;transform:rotate(12deg)">♥</b>
+    <b class="ht" style="left:2.5%;top:76%;font-size:calc(var(--u)*7);color:#ffb0c8;opacity:.8;transform:rotate(-10deg)">♥</b>
+    <b class="ht" style="left:7.5%;top:79%;font-size:calc(var(--u)*5);color:#f08aa8;opacity:.8;transform:rotate(8deg)">♥</b>
+    
+    <!-- Interactive Mailbox -->
+    <div class="mail" id="mail" tabindex="0" role="button" aria-label="Open the card">
+      <div class="letter">
+        <b>HAPPY BIRTHDAY!!!</b>
+        <small>tap to read 💌</small>
+      </div>
+      <div class="pocket"></div>
+      <div class="flap"></div>
+    </div>
+    
+    <div id="tip">click the mailbox 💌</div>
+  </div>
+
+  <audio id="bgMusic" src="lOVE IS.mp3" autoplay loop></audio>
+  
+  <!-- Add Photos Button -->
+  <label class="add">
+    ＋ Add photos
+    <!-- Hidden input triggered by the label above it -->
+    <input id="fi" type="file" accept="image/*" multiple hidden>
+  </label>
+  
+  <!-- Modal Overlay for the Message -->
+  <div id="md">
+    <div class="paper">
+      <h2 id="mh"></h2>
+      <p id="msg"></p>
+      <button id="cl">Close</button>
+    </div>
+  </div>
+
+<script>
+  // =========================================
+  // 1. CONFIGURATION
+  // =========================================
+  const NAME = 'Shania';
+  
+  const MESSAGE = `Happy Birthday, Shania! 🎂
+
+Happy Birthday to my beautiful, gorgeous friend, Shania Greence! I'm so grateful to have you as a friend, I never thought we'd get this close. I'm glad our paths crossed, and I always appreciate your smile, your laughter, and the energetic vibes that bring the whole group to life. I want you to stay as loud as you can, keep being talkative, and keep being OA! It suits you perfectly and makes you so attractive, so plsss don't ever change just because of a bad day.
+
+I hope today, and the weeks, months, and year ahead bring you everything your heart wishes for. Never stop being an amazing person. Wishing you a happy life, good health, peace, and pure happiness. Hope this chapter is full of high grades and zero burnout.
+
+Once again, HAPPY BIRTHDAY SHANIA! Enjoy your day.
+
+-from your unknown`;
+
+  // Provide paths to your images here. They will loop in the carousel.
+  const PHOTOS = [
+    'shan2.jpg',
+    'shan3.jpg',
+    'shan4.jpg',
+    'shan5.jpg',
+    'shan6.jpg',
+    'shan7.jpg',
+    'shan8.jpg',
+    'shan9.jpg',
+    'shan10.jpg',
+    'shan11.jpg',
+    'shan12.jpg',
+    'shan13.jpg',
+    'shan14.jpg',
+    'shan15.jpg',
+    'shan16.jpg',
+    'shan17.jpg',
+    'shan18.jpg',
+    'shan19.jpg',
+    'shan20.jpg',
+  ]; 
+  
+  // Helper function to get elements by ID quickly
+  const $ = id => document.getElementById(id);
+
+  // Set the dynamic text on page load
+  $('tt').textContent = 'HAPPY BIRTHDAY ' + NAME.toUpperCase();
+  $('mh').textContent = 'Dear ' + NAME + ',';
+
+  // =========================================
+  // 2. SVG GENERATORS (Candles & Balloons)
+  // =========================================
+  
+  // Function to create a candle SVG group based on X/Y position and an index (for animation delay)
+  const cd = (x, y, i) => {
+    return `
+      <g transform="translate(${x} ${y})">
+        <!-- Flame glow -->
+        <circle class="ha" r="46" cy="-22" fill="url(#hg)" style="animation-delay:${i * 0.3}s"/>
+        
+        <!-- Light rays -->
+        <g class="ry" stroke="#ffc24a" stroke-width="2.5" stroke-linecap="round" fill="none">
+          ${[-165, -130, -90, -50, -15].map(a => {
+            const r = a * Math.PI / 180;
+            const c = Math.cos(r);
+            const s = Math.sin(r);
+            return `<path d="M${c * 30} ${-22 + s * 30}L${c * 40} ${-22 + s * 40}"/>`;
+          }).join('')}
+        </g>
+        
+        <!-- Candle stick -->
+        <rect x="-12" y="0" width="24" height="56" rx="6" fill="#ffe6d2" stroke="#e0a58e" stroke-width="2"/>
+        <rect x="-12" y="0" width="24" height="56" rx="6" fill="url(#st2)"/>
+        
+        <!-- Wick -->
+        <path d="M0 0V-6" stroke="#6b4a3a" stroke-width="2"/>
+        
+        <!-- The Flame itself -->
+        <path class="fl" style="animation-delay:${i * 0.17}s" d="M0 -34Q11 -16 0 -5Q-11 -16 0 -34Z" fill="url(#fg)"/>
+      </g>
+    `;
+  };
+
+  // Inject 3 candles into the cake at specific coordinates
+  $('cds').innerHTML = [
+    [140, 62],
+    [212, 36],
+    [301, 62]
+  ].map((pos, i) => cd(pos[0], pos[1], i)).join('');
+
+  // Generate background floating balloons and hearts dynamically
+  const cols = ['#ff9ec4', '#c4a1ff', '#9cc8ff', '#ffc48a', '#ff6f7f', '#ffd1e6'];
+  for (let i = 0; i < 18; i++) {
+    const isHeart = (i % 3 === 2); // Every 3rd item is a heart, others are balloons
+    const element = document.createElement(isHeart ? 'b' : 'i');
+    const size = isHeart ? 18 + Math.random() * 22 : 38 + Math.random() * 44;
+    
+    element.className = isHeart ? 'fh' : 'b fb';
+    if (isHeart) element.textContent = '♥';
+    
+    element.style.cssText = `
+      --c: ${cols[i % 6]};
+      --sw: ${(Math.random() * 70 - 35) | 0}px;
+      left: ${Math.random() * 96}%;
+      animation-duration: ${14 + Math.random() * 14}s;
+      animation-delay: ${-Math.random() * 28}s;
+      ${isHeart ? `font-size:${size}px` : `width:${size}px; height:${size * 1.2}px`}
+    `;
+    
+    $('bl').append(element);
+  }
+
+  // Generate static balloons behind the stage elements
+  const staticBalloons = [
+    [8.5, 33, 4.2, '#ffa6c8'], [12.5, 30, 4.4, '#ff8fb8'], [16, 35, 4, '#ffc0d8'],
+    [10, 42, 4.2, '#ff9cc2'], [14.5, 43, 4.3, '#ffb3d0'], [11, 51, 4, '#ff8fb8'],
+    [35, 15, 3.4, '#b9a6f0'], [38.5, 12.5, 3.2, '#ffd0b0'], [36.5, 21, 3.4, '#ff9dbb'],
+    [93.5, 3, 3.4, '#ff9db8'], [96.5, 6, 3.3, '#b9a6f0']
+  ];
+  
+  staticBalloons.forEach((b, i) => {
+    const element = document.createElement('i');
+    element.className = 'b sb';
+    element.style.cssText = `
+      left: ${b[0]}%;
+      top: ${b[1]}%;
+      --s: ${b[2]};
+      --c: ${b[3]};
+      animation-delay: ${-i * 0.5}s;
+    `;
+    // Insert them right before the mailbox in the DOM
+    $('st').insertBefore(element, $('mail'));
+  });
+
+  // =========================================
+  // 3. MAILBOX & TYPEWRITER LOGIC
+  // =========================================
+  const mail = $('mail');
+  const md = $('md');
+  let typeTimeout;
+
+  // Typewriter effect function
+  function showLetter() {
+    md.classList.add('on');
+    clearTimeout(typeTimeout);
+    let i = 0;
+    $('msg').textContent = '';
+    
+    (function typeChar() {
+      $('msg').textContent = MESSAGE.slice(0, ++i);
+      if (i < MESSAGE.length) {
+        typeTimeout = setTimeout(typeChar, 26); // Typing speed
+      }
+    })();
+  }
+
+  // Handle clicking the mailbox
+  mail.onclick = () => {
+    $('tip').style.opacity = 0; // Hide the "click me" text
+    if (!mail.classList.contains('open')) {
+      mail.classList.add('open'); // Flips the flap and slides the letter out
+      setTimeout(showLetter, 1000); // Wait for the animation to finish, then show the text
+    } else {
+      showLetter(); // If already open, just show the letter directly
+    }
+  };
+
+  // Accessibility: allow opening mailbox with Enter/Space
+  mail.onkeydown = e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      mail.click();
+    }
+  };
+
+  // Handle closing the modal
+  $('cl').onclick = () => md.classList.remove('on');
+  md.onclick = e => { 
+    if (e.target === md) md.classList.remove('on'); 
+  };
+
+  // =========================================
+  // 4. PHOTO CAROUSEL LOGIC
+  // =========================================
+  
+  // 'S' array represents CSS properties for the 7 visible slots of the carousel.
+  // Each sub-array is: [left%, top%, width%, height%, rotation degrees, opacity]
+  // Index 3 is the active/center image. Indexes 0-2 are left, 4-6 are right.
+  const S = [
+    [36,   44,   6,    16,   -8, 0], // Hidden far left
+    [43.2, 38.5, 8.6,  22.4, -4, 1], // Small left
+    [53.6, 50.6, 10,   27.2, -2, 1], // Medium left
+    [65.5, 55.8, 12.6, 30,    0, 1], // CENTER (Active)
+    [80.3, 50.4, 9.6,  25.6,  2, 1], // Medium right
+    [90.8, 34,   8.4,  23.4,  4, 1], // Small right
+    [99,   44,   6,    16,    8, 0]  // Hidden far right
+  ];
+
+  let srcs = [...PHOTOS];
+  let items = [];
+  let cur = 0; // Currently focused image index
+  let viewed = new Set([0]); // Track which images have been rotated to center
+  let lock = 0; // Time lock to prevent rapid scrolling glitches
+
+  // Function to construct the carousel elements dynamically
+  function build() {
+    const car = $('car');
+    car.innerHTML = ''; 
+    const n = srcs.length || 7; // Default to 7 blank cards if no photos exist
+    
+    items = [...Array(n)].map((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'card';
+      
+      if (srcs[i]) {
+        const im = new Image();
+        im.src = srcs[i];
+        im.alt = '';
+        d.append(im);
+      }
+      
+      // Clicking a card directly scrolls to it
+      d.onclick = () => {
+        cur = i;
+        viewed.add(i);
+        place();
+      };
+      
+      car.append(d);
+      return d;
+    });
+    
+    cur = 0;
+    viewed = new Set([0]);
+    place();
+  }
+
+  // Function to apply styles from the `S` array to elements based on current index
+  function place() {
+    const n = items.length;
+    const h = n >> 1; // Half of total items
+    
+    items.forEach((el, i) => {
+      // Calculate distance relative to current active index
+      const d = ((i - cur + n + h) % n) - h;
+      
+      // Clamp distance between -3 and 3 to match the slots in `S` array
+      const k = Math.max(-3, Math.min(3, d));
+      const s = S[k + 3];
+      
+      // Apply styles
+      Object.assign(el.style, {
+        left: s[0] + '%',
+        top: s[1] + '%',
+        width: s[2] + '%',
+        height: s[3] + '%',
+        transform: `rotate(${s[4]}deg)`,
+        opacity: s[5],
+        zIndex: 10 - Math.abs(k),
+        pointerEvents: s[5] ? 'auto' : 'none'
+      });
+    });
+  }
+
+  // Function to advance or go back in the carousel
+  function step(dir) {
+    const now = Date.now();
+    const n = items.length;
+    
+    if (now < lock) return; // Prevent spamming scroll
+    lock = now + 650; // Lock for duration of CSS transition
+    
+    $('hint').classList.add('off'); // Hide the hint after first interaction
+    
+    // If user has looped through every single photo, jump back to the first one
+    if (viewed.size >= n) {
+      cur = 0;
+      viewed = new Set([0]);
+    } else {
+      cur = (cur + dir + n) % n;
+      viewed.add(cur);
+    }
+    
+    place();
+  }
+
+  // Listeners for navigating the carousel
+  addEventListener('wheel', e => {
+    if (md.classList.contains('on')) return; // Don't slide photos if reading letter
+    e.preventDefault();
+    if (Math.abs(e.deltaY) > 4) {
+      step(e.deltaY > 0 ? 1 : -1);
+    }
+  }, { passive: false });
+
+  let ty = 0;
+  addEventListener('touchstart', e => ty = e.touches[0].clientY, { passive: true });
+  addEventListener('touchend', e => {
+    const d = ty - e.changedTouches[0].clientY;
+    if (!md.classList.contains('on') && Math.abs(d) > 40) {
+      step(d > 0 ? 1 : -1);
+    }
+  });
+
+  addEventListener('keydown', e => {
+    if (md.classList.contains('on')) {
+      if (e.key === 'Escape') md.classList.remove('on');
+      return;
+    }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') step(-1);
+  });
+
+  // =========================================
+  // 5. FILE UPLOAD LOGIC
+  // =========================================
+  
+
+  window.addEventListener('click', () => {
+    const bgm = document.getElementById('bgMusic');
+    if (bgm && bgm.paused) {
+      bgm.play();
+      bgm.volume = 0.5; // Sets volume to 50% so it's chill and not blasting her ears
+    }
+  }, { once: true });
+
+  // Initialize the carousel on load
+  build();
+</script>
+</body>
+</html>
